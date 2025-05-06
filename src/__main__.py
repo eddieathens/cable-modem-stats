@@ -233,6 +233,18 @@ def send_to_influx(stats, config):
       }
     }))
 
+  # Get stats from ArrisDeviceStatus if they exist
+  try:
+    series.append(Point.from_dict({
+      'measurement': 'arris_device_status',
+      'time': current_time,
+      'fields': {
+         'internet_connection': stats['arris_device_status']['internet_connection']
+      }
+    }))
+  except KeyError:
+    pass
+
   try:
     write_api.write(bucket = config['influx_bucket'], record = series)
   except Exception:

@@ -134,6 +134,7 @@ def get_json(config, credential):
   }
   payload = {
     "GetMultipleHNAPs": {
+      "GetArrisDeviceStatus": "",
       "GetCustomerStatusDownstreamChannelInfo": "",
       "GetCustomerStatusUpstreamChannelInfo": "",
     }
@@ -169,6 +170,15 @@ def parse_json(json):
   logging.info('Parsing JSON for modem model s33')
 
   stats = {}
+  logging.info(f'json: {json}')
+
+  # ArrisDeviceStatus table
+  stats['arris_device_status'] = {}
+  stats['arris_device_status']['internet_connection'] = json["GetArrisDeviceStatusResponse"]["InternetConnection"]
+
+  logging.debug('ArrisDeviceStatus stats: %s', stats['arris_device_status'])
+  if not stats['arris_device_status']:
+    logging.error('Failed to get any arris_device_status stats! Probably a parsing issue in parse_json()')
 
   # downstream table
   stats['downstream'] = []
