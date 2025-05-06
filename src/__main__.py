@@ -239,7 +239,8 @@ def send_to_influx(stats, config):
       'measurement': 'arris_device_status',
       'time': current_time,
       'fields': {
-         'internet_connection': stats['arris_device_status']['internet_connection']
+         'internet_connection': stats['arris_device_status']['internet_connection'],
+         'internet_connection_integer': stats['arris_device_status']['internet_connection_integer']
       }
     }))
   except KeyError:

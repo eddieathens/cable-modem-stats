@@ -170,11 +170,19 @@ def parse_json(json):
   logging.info('Parsing JSON for modem model s33')
 
   stats = {}
-  logging.info(f'json: {json}')
+  logging.debug(f'json: {json}')
 
   # ArrisDeviceStatus table
   stats['arris_device_status'] = {}
   stats['arris_device_status']['internet_connection'] = json["GetArrisDeviceStatusResponse"]["InternetConnection"]
+  # It is difficult to alert on a string, so create a handy integer
+  if json["GetArrisDeviceStatusResponse"]["InternetConnection"] == 'Connected':
+    stats['arris_device_status']['internet_connection_integer'] = 2
+  elif json["GetArrisDeviceStatusResponse"]["InternetConnection"] == 'Not connected':
+    stats['arris_device_status']['internet_connection_integer'] = 1
+  # Something is very wrong if we get here
+  else:
+    stats['arris_device_status']['internet_connection_integer'] = 0
 
   logging.debug('ArrisDeviceStatus stats: %s', stats['arris_device_status'])
   if not stats['arris_device_status']:
